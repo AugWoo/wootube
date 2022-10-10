@@ -1,7 +1,7 @@
 {
-  "name": "woo-tube",
+  "name": "wootube",
   "version": "1.0.0",
-  "description": "woo_tube",
+  "description": "wootube",
   "scripts": {
     "dev": "nodemon --exec babel-node index.js"
   },
@@ -21,7 +21,6 @@
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@babel/node": "^7.19.1",
-    "@babel/preset-env": "^7.19.3",
-    "nodemon": "^2.0.20"
+    "@babel/preset-env": "^7.19.4"
   }
 }
