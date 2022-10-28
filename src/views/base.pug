@@ -6,7 +6,12 @@ html(lang='ko')
   body
     header
       h1=pageTitle
-    a(href='/') Home
+    nav
+      ul
+        li
+          a(href='/') Home
+        li
+          a(href='/search') Search
     main
       block content
   include partials/footer.pug
