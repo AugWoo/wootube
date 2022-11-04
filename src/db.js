@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-mongoose.connect('mongodb://127.0.0.1:27017/wootube', { 
+mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -12,4 +12,3 @@ const handleError = (error) => console.log('DB error', error);
 
 db.on('error', handleError);
 db.once('open', handleOpen);
-
