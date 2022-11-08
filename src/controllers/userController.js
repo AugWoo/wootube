@@ -138,6 +138,74 @@ export const finishGithubLogin = async (req, res) => {
   }
 };
 
+export const startKakaoLogin = (req, res) => {
+  const baseUrl = 'https://kauth.kakao.com/oauth/authorize';
+  const config = {
+    client_id: process.env.KAKAO_REST_API_KEY,
+    redirect_uri: 'http://localhost:4000/users/kakao/finish',
+    response_type: 'code',
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  return res.redirect(finalUrl);
+};
+
+export const finishKakaoLogin = async (req, res) => {
+  const baseUrl = 'https://kauth.kakao.com/oauth/token';
+  const config = {
+    grant_type: 'authorization_code',
+    client_id: process.env.KAKAO_REST_API_KEY,
+    redirect_uri: 'http://localhost:4000/users/kakao/finish',
+    code: req.query.code,
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  const tokenRequest = await (
+    await fetch(finalUrl, {
+      method: 'POST',
+    })
+  ).json();
+  if ('access_token' in tokenRequest) {
+    const { access_token } = tokenRequest;
+    const apiUrl = 'https://kapi.kakao.com/v2/user/me';
+    const userData = await (
+      await fetch(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+    ).json();
+    console.log(userData);
+
+    const kakaoAccount = userData.kakao_account;
+    const kakaoProfile = kakaoAccount.profile;
+
+    if (
+      kakaoAccount.is_email_valid === false ||
+      kakaoAccount.is_email_verified === false
+    ) {
+      return res.redirect('/login');
+    }
+    let user = await User.findOne({ email: kakaoAccount.email });
+    if (!user) {
+      user = await User.create({
+        name: kakaoProfile.nickname ? kakaoProfile.nickname : 'unknown',
+        socialOnly: true,
+        username: kakaoProfile.nickname ? kakaoProfile.nickname : 'unknown',
+        email: kakaoAccount.email ? kakaoAccount.email : 'none',
+        password: '',
+        avatarUrl: kakaoProfile.profile_image_url ? '' : 'none',
+        location: '',
+      });
+    }
+    req.session.loggedIn = true;
+    req.session.user = user;
+    return res.redirect('/');
+  } else {
+    return res.redirect('/login');
+  }
+};
+
 export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect('/');
