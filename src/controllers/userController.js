@@ -104,7 +104,6 @@ export const finishGithubLogin = async (req, res) => {
         },
       })
     ).json();
-    console.log(userData);
     const emailData = await (
       await fetch(`${apiUrl}/user/emails`, {
         headers: {
@@ -175,7 +174,7 @@ export const finishKakaoLogin = async (req, res) => {
         },
       })
     ).json();
-    console.log(userData);
+    // console.log(userData);
 
     const kakaoAccount = userData.kakao_account;
     const kakaoProfile = kakaoAccount.profile;
@@ -211,5 +210,32 @@ export const logout = (req, res) => {
   return res.redirect('/');
 };
 
-export const edit = (req, res) => res.send('edit');
+export const getEdit = (req, res) => {
+  return res.render('edit-profile', { pageTitle: 'Edit Profile' });
+};
+
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { name, email, username, location },
+  } = req;
+  // const id = req.session.user.id;
+  // const { name, email, username, location } = req.body;
+
+  const updateUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      name,
+      email,
+      username,
+      location,
+    },
+    { new: true }
+  );
+  req.session.user = updateUser;
+  return res.redirect('/users/edit');
+};
+
 export const see = (req, res) => res.send('see');
