@@ -254,4 +254,41 @@ export const postEdit = async (req, res) => {
   return res.redirect('/users/edit');
 };
 
+export const getChangePassword = (req, res, next) => {
+  if (req.session.user.socialOnly === true) {
+    return res.redirect('/');
+  }
+  return res.render('change-password', { pageTitle: 'Change Password' });
+};
+
+export const postChangePassword = async (req, res, next) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { oldPassword, newPassword, newPasswordConfirmation },
+  } = req;
+  const user = await User.findById(_id);
+  const ok = await bcrypt.compare(oldPassword, user.password);
+  if (!ok) {
+    return res.status(400).render('/change-password', {
+      errorMessage: 'The current password is incorrect.',
+    });
+  }
+  if (oldPassword === newPassword) {
+    return res.status(400).render('/change-password', {
+      errorMessage: 'The old password equals new password.',
+    });
+  }
+  if (newPassword !== newPasswordConfirmation) {
+    return res.status(400).render('/change-password', {
+      errorMessage: 'New passwords do not match.',
+    });
+  }
+  user.password = newPassword;
+  await user.save();
+  req.session.destroy();
+  return res.redirect('/login');
+};
+
 export const see = (req, res) => res.send('see');
