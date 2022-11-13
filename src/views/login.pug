@@ -7,12 +7,7 @@ block content
     input(placeholder='Username' name='username', type='text', required)
     input(placeholder='Password' name='password', type='password', required)
     input(type='submit', value='Login')
-    br
-    a(href='/users/github/start') Continue with Github &rarr;
-    br
-    a(href='/users/kakao/start') Continue with Kakao &rarr;
-  hr
-  div
+    include partials/social-login
+  div.auth-switch
     span Don't have an account?
-  div
     a(href='/join') Create Now &rarr;
