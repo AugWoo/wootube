@@ -234,7 +234,7 @@ form {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-input {
+input:not([type=range]) {
   all: unset;
   padding: 5px 20px;
   border-radius: 5px;
@@ -245,7 +245,7 @@ input {
   color: white;
   width: 90%;
 }
-input::placeholder {
+input:not([type=range])::placeholder {
   color: rgba(255, 255, 255, 0.7);
 }
 
