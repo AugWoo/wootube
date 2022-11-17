@@ -11,6 +11,7 @@ const fullScreenBtn = document.querySelector('#fullScreen');
 const fullScreenBtnIcon = fullScreenBtn.querySelector('i');
 const videoContainer = document.querySelector('#videoContainer');
 const videoControls = document.querySelector('#videoControls');
+const comment = document.querySelector('#commentArea');
 
 let controlsTimeout = null;
 let controlsMovementTimeout = null;
@@ -147,16 +148,25 @@ video.addEventListener('click', (e) => {
 });
 window.addEventListener('keydown', function (e) {
   if (e.code === 'Enter') {
+    if (e.target.id === comment.id) {
+      return;
+    }
     handlePlayClick();
   }
 });
 window.addEventListener('keydown', (e) => {
   if (e.key === 'm') {
+    if (e.target.id === comment.id) {
+      return;
+    }
     handleMute();
   }
 });
 window.addEventListener('keydown', (e) => {
   if (e.key === 'f') {
+    if (e.target.id === comment.id) {
+      return;
+    }
     handleFullscreen();
   }
 });

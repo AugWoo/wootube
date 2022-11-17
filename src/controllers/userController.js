@@ -210,6 +210,10 @@ export const finishKakaoLogin = async (req, res) => {
 export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect('/');
+
+  // req.session.user = null;
+  // res.locals.loggedInUser = req.session.user;
+  // req.session.loggedIn = false;
 };
 
 export const getEdit = (req, res) => {

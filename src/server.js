@@ -18,6 +18,7 @@ app.use(logger);
 app.use(express.urlencoded({ extended: true }));
 // this helps express app understand value of form.
 // express can't read data by using form.
+app.use(express.json());
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,
