@@ -63,6 +63,7 @@ export const postLogin = async (req, res) => {
   }
   req.session.loggedIn = true;
   req.session.user = user;
+  req.flash('success', `Welcome! ${user.name}`);
   return res.redirect('/');
 };
 
@@ -258,8 +259,10 @@ export const postEdit = async (req, res) => {
 
 export const getChangePassword = (req, res, next) => {
   if (req.session.user.socialOnly === true) {
+    req.flash('error', 'Cannot change password');
     return res.redirect('/');
   }
+  req.flash('error', 'Password Changed');
   return res.render('users/change-password', { pageTitle: 'Change Password' });
 };
 
