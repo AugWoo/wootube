@@ -26,7 +26,7 @@ const handleSubmit = async (e) => {
   const text = textarea.value;
   const videoId = videoContainer.dataset.video_id;
   if (text.trim() === '') {
-    alert('Not vacuum.');
+    alert('No blank.');
     return;
   }
   const response = await fetch(`/api/videos/${videoId}/comment`, {
@@ -42,6 +42,8 @@ const handleSubmit = async (e) => {
     textarea.value = '';
     const { newCommentId } = await response.json();
     addComment(text, newCommentId);
+    deleteComment = document.querySelector('#deleteBtn');
+    deleteComment.addEventListener('click', handleDeleteComment);
   }
 };
 
